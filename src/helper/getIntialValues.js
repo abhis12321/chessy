@@ -10,12 +10,12 @@ export const ranks = new Array(8).fill().map((val, index) => 8 - index);
 export const files = new Array(8).fill().map((val, index) => getChar(index));
 
 
-export const WR = <FaChessRook className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
-export const WKt = <FaChessKnight className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
-export const WB = <FaChessBishop className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
-export const WQ = <FaChessQueen className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
-export const WK = <FaChessKing className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
-export const WP = <FaChessPawn className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_2px_black]" />
+export const WR = <FaChessRook className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
+export const WKt = <FaChessKnight className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
+export const WB = <FaChessBishop className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
+export const WQ = <FaChessQueen className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
+export const WK = <FaChessKing className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
+export const WP = <FaChessPawn className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
 
 export const BR = <FaChessRook className="text-[calc(min(100vw,100vh)/14)]" />
 export const BKt = <FaChessKnight className="text-[calc(min(100vw,100vh)/14)]" />

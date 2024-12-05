@@ -3,46 +3,35 @@ import { useRef } from 'react';
 import { copyPostions } from '@/helper/getIntialValues';
 import { useChessContext } from '@/context/Context';
 import { validateNormalMove } from '@/abriter/validateNormalMove';
+import { isKingChecked } from '@/abriter/isKingChecked';
 
 export default function Pieces() {
     const ref = useRef();
-    const { chessState , dispatch } = useChessContext();
+    const { chessState, dispatch } = useChessContext();
     const positions = chessState.positions[chessState.positions.length - 1];
 
     const handleDragOver = (e) => e.preventDefault();
 
     const calculateCoOrdinates = (e) => {
-        const { top , left , width } = ref.current.getBoundingClientRect();
+        const { top, left, width } = ref.current.getBoundingClientRect();
         const size = width / 8;
         const targetRank = Math.floor((e.clientY - top) / size);
         const targetFile = Math.floor((e.clientX - left) / size);
-        return { targetRank , targetFile};
+        return { targetRank, targetFile };
     }
 
-    const isValidMove_01 = ({ targetRank , targetFile , ChessPiece}) => {  
-        const check_00 = positions[targetRank][targetFile] !== '';
-        const check_01 = (positions[targetRank][targetFile] > 5 && ChessPiece > 5);
-        const check_02 = (positions[targetRank][targetFile] <= 5 && ChessPiece <= 5);
-        const check_10 = (ChessPiece > 5 && chessState.turn === 'w');
-        const check_11 = (ChessPiece <= 5  && chessState.turn === 'b');
-        
-        if((check_00 && (check_01 || check_02)) || check_10 || check_11) {
-            return false;
-        }
-        return true;
-    }
 
     const handleDrop = (e) => {
-        const { ChessPiece , rank, file } = JSON.parse(e.dataTransfer.getData('application/json'));
-        const { targetRank , targetFile } = calculateCoOrdinates(e);
-        if(!isValidMove_01({ targetRank , targetFile , ChessPiece })) {
-            return;
-        }
-        if(validateNormalMove({ positions , rank , file , ChessPiece , targetRank , targetFile })) {
+        const { ChessPiece, rank, file } = JSON.parse(e.dataTransfer.getData('application/json'));
+        const { targetRank, targetFile } = calculateCoOrdinates(e);
+        const check_turn = ((chessState.turn === 'w' && ChessPiece <= 5) || (chessState.turn === 'b' && ChessPiece > 5))
+        if(check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
-            dispatch({ type:"NEW_POSITION" , nvPositions})
+            if(!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
+                dispatch({ type: "NEW_POSITION", nvPositions })
+            }
         }
     }
 
@@ -51,7 +40,7 @@ export default function Pieces() {
             {
                 positions?.map((rows, rank) =>
                     rows?.map((ChessPiece, file) => (ChessPiece || ChessPiece === 0) &&
-                        <Peice key={`${rank}-${file}`} rank={rank} file={file} ChessPiece={ChessPiece}/>
+                        <Peice key={`${rank}-${file}`} rank={rank} file={file} ChessPiece={ChessPiece} />
                     ))
             }
         </div>
