@@ -15,7 +15,7 @@ export default function Peice({ ChessPiece, rank, file }) {
 
 
     return (
-        <button className={`absolute h-[12.5%] aspect-square p-${rank}${file} flex items-center justify-center`} draggable={true} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <button className={`absolute h-[12.5%] aspect-square flex items-center justify-center p-${rank}${file}`} draggable={true} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             {CPS[ChessPiece]}
         </button>
     )

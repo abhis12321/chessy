@@ -69,3 +69,9 @@ export const copyPostions = (positions) => {
     }
     return newPositions;
 }
+
+
+export const initialChessState = {
+    positions: [getInitalPositions()],
+    turn: 'w',
+}

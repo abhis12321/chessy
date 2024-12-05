@@ -1,11 +1,12 @@
-"use client"
 import Peice from './Peice';
-import { useRef, useState } from 'react';
-import { copyPostions, getInitalPositions } from '@/helper/getIntialValues';
+import { useRef } from 'react';
+import { copyPostions } from '@/helper/getIntialValues';
+import { useChessContext } from '@/context/Context';
 
 export default function Pieces() {
     const ref = useRef();
-    const [positions , setPositions] = useState(getInitalPositions());
+    const { chessState , dispatch } = useChessContext();
+    const positions = chessState.positions[chessState.positions.length - 1];
 
     const handleDragOver = (e) => e.preventDefault();
 
@@ -18,13 +19,15 @@ export default function Pieces() {
     }
 
     const handleDrop = (e) => {
-        const { targetRank , targetFile } = calculateCoOrdinates(e);
         const { ChessPiece , rank, file } = JSON.parse(e.dataTransfer.getData('application/json'));
-
+        if((ChessPiece > 5 && chessState.turn === 'w') || (ChessPiece < 6 && chessState.turn === 'b')) {
+            return;
+        }
+        const { targetRank , targetFile } = calculateCoOrdinates(e);
         const nvPositions = copyPostions(positions);
         nvPositions[rank][file] = '';
         nvPositions[targetRank][targetFile] = ChessPiece;
-        setPositions(nvPositions);
+        dispatch({ type:"NEW_POSITION" , nvPositions})
     }
 
     return (
