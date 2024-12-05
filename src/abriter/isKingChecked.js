@@ -2,13 +2,11 @@
 
 export const isKingChecked = ({ positions, king }) => {
     const { rank, file } = getKingPosition({ positions, king });
+    const isRookOrQueenCheck = checkRookOrQueenCheck({ positions, rank, file, rook: king === 4 ? 6 : 0, queen: king === 4 ? 9 : 3 });
     const isKnightCheck = checkKnightCheck({ positions, rank, file, knight: king === 4 ? 7 : 1 });
-    const isPawnCheck = checkPawnCheck({ positions, rank, file, pawn: king === 4 ? 11 : 5 })
-    const isRookCheck = checkRookCheck({ positions, rank, file, pawn: king === 4 ? 6 : 0 })
-
-    // console.log({ isKnightCheck , isPawnCheck })
-
-    return (isPawnCheck || isKnightCheck || isRookCheck)
+    const isBishopOrQueenCheck = checkBishopOrQueenCheck({ positions, rank, file, bishop: king === 4 ? 8 : 2, queen: king === 4 ? 9 : 3 });
+    const isPawnCheck = checkPawnCheck({ positions, rank, file, pawn: king === 4 ? 11 : 5 });
+    return (isPawnCheck || isKnightCheck || isRookOrQueenCheck || isBishopOrQueenCheck)
 }
 
 
@@ -40,8 +38,8 @@ const isKnight = (x, y, positions, knight) => (x >= 0 && x < 8 && y >= 0 && y < 
 
 
 const checkPawnCheck = ({ positions, rank, file, pawn }) => {
-    const case_01 = isPawn(rank + (pawn === 5 ? -1 : 1), file - 1 , positions , pawn);
-    const case_02 = isPawn(rank + (pawn === 5 ? -1 : 1), file + 1 , positions , pawn);
+    const case_01 = isPawn(rank + (pawn === 5 ? -1 : 1), file - 1, positions, pawn);
+    const case_02 = isPawn(rank + (pawn === 5 ? -1 : 1), file + 1, positions, pawn);
     return (case_01 || case_02);
 }
 
@@ -49,40 +47,86 @@ const isPawn = (x, y, positions, pawn) => (x >= 0 && x < 8 && y >= 0 && y < 8 &&
 
 
 
-const checkRookCheck = ({ positions, rank, file, rook }) => {
+const checkRookOrQueenCheck = ({ positions, rank, file, rook, queen }) => {
     let i = rank;
     let j = file;
 
-    while(--i >= 0) {
-        if(positions[i][file] === rook) {
+    while (--i >= 0) {
+        if (positions[i][file] === rook || positions[i][file] === queen) {
             return true;
-        } else if(positions[i][file] !== '') {
+        } else if (positions[i][file] !== '') {
             break;
         }
     }
 
     i = rank;
-    while(++i >= 0) {
-        if(positions[i][file] === rook) {
+    while (++i < 8) {
+        if (positions[i][file] === rook || positions[i][file] === queen) {
             return true;
-        } else if(positions[i][file] !== '') {
+        } else if (positions[i][file] !== '') {
             break;
         }
     }
 
-    while(--j >= 0) {
-        if(positions[rank][j] === rook) {
+    while (--j >= 0) {
+        if (positions[rank][j] === rook || positions[rank][j] === queen) {
             return true;
-        } else if(positions[rank][j] !== '') {
+        } else if (positions[rank][j] !== '') {
             break;
         }
     }
 
     j = file;
-    while(++j >= 0) {
-        if(positions[rank][j] === rook) {
+    while (++j < 8) {
+        if (positions[rank][j] === rook || positions[rank][j] === queen) {
             return true;
-        } else if(positions[rank][j] !== '') {
+        } else if (positions[rank][j] !== '') {
+            break;
+        }
+    }
+
+    return false;
+}
+
+
+const checkBishopOrQueenCheck = ({ positions, rank, file, bishop, queen }) => {
+    let i = rank;
+    let j = file;
+
+    while (--i >= 0 && --j >= 0) {
+        if (positions[i][j] === bishop || positions[i][j] === queen) {
+            return true;
+        } else if (positions[i][j] !== '') {
+            break;
+        }
+    }
+
+    i = rank;
+    j = file;
+    while (++i < 8 && ++j < 8) {
+        if (positions[i][j] === bishop || positions[i][j] === queen) {
+            return true;
+        } else if (positions[i][j] !== '') {
+            break;
+        }
+    }
+
+    i = rank;
+    j = file;
+    while (--i >= 0 && ++j < 8) {
+        if (positions[i][j] === bishop || positions[i][j] === queen) {
+            return true;
+        } else if (positions[i][j] !== '') {
+            break;
+        }
+    }
+
+    i = rank;
+    j = file;
+    while (++i < 8 && --j >= 0) {
+        if (positions[i][j] === bishop || positions[i][j] === queen) {
+            return true;
+        } else if (positions[i][j] !== '') {
             break;
         }
     }
