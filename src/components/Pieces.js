@@ -2,11 +2,7 @@ import Peice from './Peice';
 import { useRef } from 'react';
 import { copyPostions } from '@/helper/getIntialValues';
 import { useChessContext } from '@/context/Context';
-import { getRookMove } from '@/abriter/getRootMove';
-import { getKnightMove } from '@/abriter/getKnightMove';
-import { getBishopMove } from '@/abriter/getBishopMove';
-import { getQueenMove } from '@/abriter/getQueenMove';
-import { getKingMove } from '@/abriter/getKingMove';
+import { validateNormalMove } from '@/abriter/validateNormalMove';
 
 export default function Pieces() {
     const ref = useRef();
@@ -42,20 +38,11 @@ export default function Pieces() {
         if(!isValidMove_01({ targetRank , targetFile , ChessPiece })) {
             return;
         }
-        const nvPositions = copyPostions(positions);
-        nvPositions[rank][file] = '';
-        nvPositions[targetRank][targetFile] = ChessPiece;
-        dispatch({ type:"NEW_POSITION" , nvPositions})
-        if(ChessPiece === 0 || ChessPiece === 6) {
-            console.log(getRookMove({ positions , rank , file , ChessPiece }));
-        } else if(ChessPiece === 1 || ChessPiece === 7) {
-            console.log(getKnightMove({ positions , rank , file , ChessPiece }));            
-        } else if(ChessPiece === 2 || ChessPiece === 8) {
-            console.log(getBishopMove({ positions , rank , file , ChessPiece }));
-        } else if(ChessPiece === 3 || ChessPiece == 9) {
-            console.log(getQueenMove({ positions , rank , file , ChessPiece }));
-        } else if(ChessPiece === 4 || ChessPiece === 10) {
-            console.log(getKingMove({ positions , rank , file , ChessPiece }));
+        if(validateNormalMove({ positions , rank , file , ChessPiece , targetRank , targetFile })) {
+            const nvPositions = copyPostions(positions);
+            nvPositions[rank][file] = '';
+            nvPositions[targetRank][targetFile] = ChessPiece;
+            dispatch({ type:"NEW_POSITION" , nvPositions})
         }
     }
 

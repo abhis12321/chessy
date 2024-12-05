@@ -24,7 +24,7 @@ export const BQ = <FaChessQueen className="text-[calc(min(100vw,100vh)/14)]" />
 export const BK = <FaChessKing className="text-[calc(min(100vw,100vh)/14)]" />
 export const BP = <FaChessPawn className="text-[calc(min(100vw,100vh)/14)]" />
 
-export const CPS = [WR , WKt , WB , WQ , WK, WP , BR , BKt , BB , BQ , BK , BP];
+export const CPS = [WR, WKt, WB, WQ, WK, WP, BR, BKt, BB, BQ, BK, BP];
 
 export const getInitalPositions = () => {
     let positions = new Array(8).fill('').map((x) => new Array(8).fill(''));
@@ -62,8 +62,8 @@ export const getInitalPositions = () => {
 
 export const copyPostions = (positions) => {
     let newPositions = new Array(8).fill('').map((x) => new Array(8).fill(''));
-    for(let rank = 0; rank < 8; rank++) {
-        for(let file = 0; file < 8; file++) {
+    for (let rank = 0; rank < 8; rank++) {
+        for (let file = 0; file < 8; file++) {
             newPositions[rank][file] = positions[rank][file];
         }
     }
