@@ -5,6 +5,7 @@ import { useChessContext } from '@/context/Context';
 import { getRookMove } from '@/abriter/getRootMove';
 import { getKnightMove } from '@/abriter/getKnightMove';
 import { getBishopMove } from '@/abriter/getBishopMove';
+import { getQueenMove } from '@/abriter/getQueenMove';
 
 export default function Pieces() {
     const ref = useRef();
@@ -50,6 +51,8 @@ export default function Pieces() {
             console.log(getKnightMove({ positions , rank , file , ChessPiece }));            
         } else if(ChessPiece == 2 || ChessPiece == 8) {
             console.log(getBishopMove({ positions , rank , file , ChessPiece }));
+        } else if(ChessPiece == 3 || ChessPiece == 9) {
+            console.log(getQueenMove({ positions , rank , file , ChessPiece }));
         }
     }
 

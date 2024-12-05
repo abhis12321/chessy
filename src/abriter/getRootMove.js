@@ -1,4 +1,4 @@
-export const getRookMove = ({ positions , rank, file , ChessPiece }) => {
+export const getRookMove = ({ positions, rank, file, ChessPiece }) => {
     const move = [];
     let i = rank, j = file;
     while(--i >= 0) {

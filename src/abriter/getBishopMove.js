@@ -1,6 +1,6 @@
 
 
-export const getBishopMove = ({ positions , rank, file , ChessPiece }) => {
+export const getBishopMove = ({ positions, rank, file, ChessPiece }) => {
     const move = [];
     let x = rank;
     let y = file;
