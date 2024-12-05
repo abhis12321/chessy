@@ -2,6 +2,7 @@ import Peice from './Peice';
 import { useRef } from 'react';
 import { copyPostions } from '@/helper/getIntialValues';
 import { useChessContext } from '@/context/Context';
+import { getRookMove } from '@/abriter/getRootMove';
 
 export default function Pieces() {
     const ref = useRef();
@@ -41,6 +42,9 @@ export default function Pieces() {
         nvPositions[rank][file] = '';
         nvPositions[targetRank][targetFile] = ChessPiece;
         dispatch({ type:"NEW_POSITION" , nvPositions})
+        if(ChessPiece == 0 || ChessPiece === 6) {
+            console.log(getRookMove({ positions , rank , file , ChessPiece }));
+        }
     }
 
     return (
