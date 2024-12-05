@@ -18,12 +18,25 @@ export default function Pieces() {
         return { targetRank , targetFile};
     }
 
+    const isValidMove_01 = ({ targetRank , targetFile , ChessPiece}) => {  
+        const check_00 = positions[targetRank][targetFile] !== '';
+        const check_01 = (positions[targetRank][targetFile] > 5 && ChessPiece > 5);
+        const check_02 = (positions[targetRank][targetFile] <= 5 && ChessPiece <= 5);
+        const check_10 = (ChessPiece > 5 && chessState.turn === 'w');
+        const check_11 = (ChessPiece <= 5  && chessState.turn === 'b');
+        
+        if((check_00 && (check_01 || check_02)) || check_10 || check_11) {
+            return false;
+        }
+        return true;
+    }
+
     const handleDrop = (e) => {
         const { ChessPiece , rank, file } = JSON.parse(e.dataTransfer.getData('application/json'));
-        if((ChessPiece > 5 && chessState.turn === 'w') || (ChessPiece < 6 && chessState.turn === 'b')) {
+        const { targetRank , targetFile } = calculateCoOrdinates(e);
+        if(!isValidMove_01({ targetRank , targetFile , ChessPiece })) {
             return;
         }
-        const { targetRank , targetFile } = calculateCoOrdinates(e);
         const nvPositions = copyPostions(positions);
         nvPositions[rank][file] = '';
         nvPositions[targetRank][targetFile] = ChessPiece;
