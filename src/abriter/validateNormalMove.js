@@ -3,7 +3,7 @@ import { getKingMove } from "./getKingMove"
 import { getKnightMove } from "./getKnightMove"
 import { getPawnMove } from "./getPawnMove"
 import { getQueenMove } from "./getQueenMove"
-import { getRookMove } from "./getRootMove"
+import { getRookMove } from "./getRooKMove"
 
 const getMove = [getRookMove, getKnightMove, getBishopMove, getQueenMove, getKingMove, getPawnMove];
 

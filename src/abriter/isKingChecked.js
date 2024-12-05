@@ -4,10 +4,11 @@ export const isKingChecked = ({ positions, king }) => {
     const { rank, file } = getKingPosition({ positions, king });
     const isKnightCheck = checkKnightCheck({ positions, rank, file, knight: king === 4 ? 7 : 1 });
     const isPawnCheck = checkPawnCheck({ positions, rank, file, pawn: king === 4 ? 11 : 5 })
+    const isRookCheck = checkRookCheck({ positions, rank, file, pawn: king === 4 ? 6 : 0 })
 
     // console.log({ isKnightCheck , isPawnCheck })
 
-    return (isPawnCheck || isKnightCheck)
+    return (isPawnCheck || isKnightCheck || isRookCheck)
 }
 
 
@@ -45,3 +46,46 @@ const checkPawnCheck = ({ positions, rank, file, pawn }) => {
 }
 
 const isPawn = (x, y, positions, pawn) => (x >= 0 && x < 8 && y >= 0 && y < 8 && positions[x][y] === pawn);
+
+
+
+const checkRookCheck = ({ positions, rank, file, rook }) => {
+    let i = rank;
+    let j = file;
+
+    while(--i >= 0) {
+        if(positions[i][file] === rook) {
+            return true;
+        } else if(positions[i][file] !== '') {
+            break;
+        }
+    }
+
+    i = rank;
+    while(++i >= 0) {
+        if(positions[i][file] === rook) {
+            return true;
+        } else if(positions[i][file] !== '') {
+            break;
+        }
+    }
+
+    while(--j >= 0) {
+        if(positions[rank][j] === rook) {
+            return true;
+        } else if(positions[rank][j] !== '') {
+            break;
+        }
+    }
+
+    j = file;
+    while(++j >= 0) {
+        if(positions[rank][j] === rook) {
+            return true;
+        } else if(positions[rank][j] !== '') {
+            break;
+        }
+    }
+
+    return false;
+}

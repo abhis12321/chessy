@@ -1,5 +1,5 @@
 import { getBishopMove } from "./getBishopMove"
-import { getRookMove } from "./getRootMove"
+import { getRookMove } from "./getRooKMove"
 
 
 export const getQueenMove = ({ positions, rank, file, ChessPiece }) => {
