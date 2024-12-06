@@ -17,13 +17,13 @@ export const getPawnMove = ({ positions, rank, file, ChessPiece }) => {
     // Capture-left
     x = rank + (ChessPiece == 5 ? 1 : -1);
     y = file - 1;
-    if(isCaptureValid(x, y, positions , ChessPiece)) {
+    if (isCaptureValid(x, y, positions, ChessPiece)) {
         move.push([x, y]);
     }
 
     // Capture-right
     y = file + 1;
-    if(isCaptureValid(x, y, positions , ChessPiece)) {
+    if (isCaptureValid(x, y, positions, ChessPiece)) {
         move.push([x, y]);
     }
 
@@ -32,4 +32,4 @@ export const getPawnMove = ({ positions, rank, file, ChessPiece }) => {
 
 const isForwardValid = (x, y, positions) => (x >= 0 && y >= 0 && x < 8 && y < 8 && positions[x][y] == '');
 
-const isCaptureValid = (x, y, positions, ChessPiece) => (x >= 0 && y >= 0 && x < 8 && y < 8 && positions[x][y] !== '' && ((positions[x][y] <= 5 && ChessPiece > 5) || (positions[x][y] > 5 && ChessPiece <= 5)))
+const isCaptureValid = (x, y, positions, ChessPiece) => (x >= 0 && y >= 0 && x < 8 && y < 8 && positions[x][y] !== '' && ((positions[x][y] <= 5 && ChessPiece > 5) || (positions[x][y] > 5 && ChessPiece <= 5)));

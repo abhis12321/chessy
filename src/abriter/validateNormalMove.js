@@ -5,7 +5,7 @@ import { getPawnMove } from "./getPawnMove"
 import { getQueenMove } from "./getQueenMove"
 import { getRookMove } from "./getRooKMove"
 
-const getMove = [getRookMove, getKnightMove, getBishopMove, getQueenMove, getKingMove, getPawnMove];
+export const getMove = [getRookMove, getKnightMove, getBishopMove, getQueenMove, getKingMove, getPawnMove];
 
 
 export const validateNormalMove = ({ positions, rank, file, ChessPiece, targetRank, targetFile }) => {

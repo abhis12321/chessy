@@ -1,13 +1,13 @@
 import Peice from './Peice';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useChessContext } from '@/context/Context';
 import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
-import { validateNormalMove } from '@/abriter/validateNormalMove';
+import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
 
 export default function Pieces() {
     const ref = useRef();
-    const { chessState, dispatch } = useChessContext();
+    const { chessState, dispatch, setActiveMoves } = useChessContext();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
     const positions = chessState.positions[chessState.positions.length - 1];
@@ -58,6 +58,19 @@ export default function Pieces() {
             setActiveTile();
         }
     }
+
+
+    useEffect(() => {
+        if (activeTile) {
+            const rank = activeTile[0];
+            const file = activeTile[1];
+            const ChessPiece = activeTile[2];
+            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece }));
+        } else {
+            setActiveMoves([]);
+        }
+    }, [activeTile]);
+
 
     return (
         <div className='absolute top-0 left-0 right-0 bottom-0 w-full h-full grid grid-cols-8 grid-flow-row bg-red-600/10' ref={ref} onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleBoardClick}>
