@@ -1,7 +1,7 @@
 import { CPS } from "@/helper/getIntialValues";
 
 
-export default function Peice({ ChessPiece, rank, file }) {
+export default function Peice({ ChessPiece, rank, file, handleClick, activeTile, inActiveTile }) {
     const handleDragStart = (e) => {
         e.dataTransfer.setData("application/json", JSON.stringify({ ChessPiece, rank, file }));
         setTimeout(() => {
@@ -15,7 +15,7 @@ export default function Peice({ ChessPiece, rank, file }) {
 
 
     return (
-        <button className={`absolute h-[12.5%] aspect-square flex items-center justify-center text-[calc(min(100vw,100vh)/14)] p-${rank}${file} ${ChessPiece <= 5 ? "text-white *drop-shadow-[0_0_1px_black]" : "*:drop-shadow-[0_0_1px_white]"}`} draggable={true} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <button className={`absolute h-[12.5%] aspect-square flex items-center justify-center text-[calc(min(100vw,100vh)/14)] p-${rank}${file} ${ChessPiece <= 5 ? "text-white *drop-shadow-[0_0_1px_black]" : "*:drop-shadow-[0_0_1px_white]"} ${activeTile?.[0] === rank && activeTile?.[1] === file && activeTile?.[2] === ChessPiece && "bg-green-700/50"} ${inActiveTile?.[0] === rank && inActiveTile?.[1] === file && inActiveTile?.[2] === ChessPiece && ((rank + file) % 2 ? "bg-blue-700/35" : "bg-blue-950/50")}`} draggable={true} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onClick={e => handleClick({ rank, file, ChessPiece })} >
             {CPS[ChessPiece]}
         </button>
     )
