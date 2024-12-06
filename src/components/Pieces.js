@@ -4,6 +4,7 @@ import { useChessContext } from '@/context/Context';
 import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
 import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
+import { checkIfEnPassant } from '@/abriter/getPawnMove';
 
 export default function Pieces() {
     const ref = useRef();
@@ -11,6 +12,7 @@ export default function Pieces() {
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
     const positions = chessState.positions[chessState.positions.length - 1];
+    const prevPositions = chessState.positions[chessState.positions.length - 2];
 
     const handleDragOver = (e) => e.preventDefault();
 
@@ -23,14 +25,16 @@ export default function Pieces() {
     }
 
     const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
-        if (check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile })) {
+        if (check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile, prevPositions })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
+                const isPassant = checkIfEnPassant({positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions})
                 dispatch({ type: "NEW_POSITION", nvPositions });
                 setActiveTile();
                 setInActiveTile([targetRank, targetFile, ChessPiece]);
+                console.log(isPassant)
             }
         }
     }
@@ -65,7 +69,7 @@ export default function Pieces() {
             const rank = activeTile[0];
             const file = activeTile[1];
             const ChessPiece = activeTile[2];
-            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece }));
+            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions }));
         } else {
             setActiveMoves([]);
         }

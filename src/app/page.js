@@ -4,7 +4,7 @@ import { reducer } from "@/reducer/reducer";
 import RanksBar from "@/components/RanksBar";
 import FilesBar from "@/components/FilesBar";
 import { ChessContext } from "@/context/Context";
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { files, initialChessState, ranks } from "@/helper/getIntialValues";
 
 export default function page() {
@@ -22,6 +22,8 @@ export default function page() {
     }
     return false;
   }, [activeMoves]);
+
+  useEffect(() => console.log(activeMoves) , [activeMoves])
 
   return (
     <ChessContext.Provider value={{ chessState, dispatch, activeMoves, setActiveMoves, isActiveMove }}>
