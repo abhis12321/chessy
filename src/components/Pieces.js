@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useChessContext } from '@/context/Context';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
-import RookMoveAudioFile from '/public/soundEffect/rook.mp3'
-import knightMoveAudioFile from '/public/soundEffect/knight.mp3'
-import bishopMoveAudioFile from '/public/soundEffect/bishop.mp3'
-import kingMoveAudioFile from '/public/soundEffect/king.mp3'
-import queenMoveAudioFile from '/public/soundEffect/queen.mp3'
-import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
 import { getValidAllMoves, validateNormalMove } from '@/abriter/validMoves';
+import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
+// import RookMoveAudioFile from '/public/soundEffect/rook.mp3'
+// import knightMoveAudioFile from '/public/soundEffect/knight.mp3'
+// import bishopMoveAudioFile from '/public/soundEffect/bishop.mp3'
+// import kingMoveAudioFile from '/public/soundEffect/king.mp3'
+// import queenMoveAudioFile from '/public/soundEffect/queen.mp3'
 
 
 
@@ -32,16 +32,16 @@ export default function Pieces() {
         return { targetRank, targetFile };
     }
 
-    const getAudioFile = (rem) => {
-        switch (rem) {
-            case 0: return RookMoveAudioFile;
-            case 1: return knightMoveAudioFile;
-            case 2: return bishopMoveAudioFile;
-            case 3: return queenMoveAudioFile;
-            case 4: return kingMoveAudioFile;
-            default: return pawnMoveAudioFile;
-        }
-    }
+    // const getAudioFile = (rem) => {
+    //     switch (rem) {
+    //         case 0: return RookMoveAudioFile;
+    //         case 1: return knightMoveAudioFile;
+    //         case 2: return bishopMoveAudioFile;
+    //         case 3: return queenMoveAudioFile;
+    //         case 4: return kingMoveAudioFile;
+    //         default: return pawnMoveAudioFile;
+    //     }
+    // }
 
     const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
         if (check_turn && validateNormalMove({ targetRank, targetFile, activeMoves })) {
@@ -50,13 +50,13 @@ export default function Pieces() {
             nvPositions[targetRank][targetFile] = ChessPiece;
             const chessMoveAudio = new Audio(pawnMoveAudioFile);
             chessMoveAudio.play();
-            if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
+            if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) { // castle
                 let oldX = file > targetFile ? 0 : 7;
                 let x = targetFile + (file > targetFile ? 1 : -1);
                 nvPositions[rank][x] = nvPositions[rank][oldX];
                 nvPositions[rank][oldX] = '';
             }
-            checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions })
+            checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions }); //En-passant
             dispatch({ type: "NEW_POSITION", nvPositions });
             setActiveTile();
             setInActiveTile([targetRank, targetFile, ChessPiece]);
@@ -112,7 +112,7 @@ export default function Pieces() {
 
 
     return (
-        <div className='absolute top-0 left-0 right-0 bottom-0 w-full h-full grid grid-cols-8 grid-flow-row bg-red-600/10' ref={ref} onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleBoardClick}>
+        <div className='w-full h-full absolute top-0 left-0 right-0 bottom-0 grid grid-cols-8 grid-flow-row bg-red-600/10' ref={ref} onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleBoardClick}>
             {
                 positions?.map((rows, rank) =>
                     rows?.map((ChessPiece, file) => (ChessPiece || ChessPiece === 0) &&
