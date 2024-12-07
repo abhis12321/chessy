@@ -1,16 +1,15 @@
 import Peice from './Peice';
 import { useEffect, useRef, useState } from 'react';
 import { useChessContext } from '@/context/Context';
-import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
-import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
 import RookMoveAudioFile from '/public/soundEffect/rook.mp3'
 import knightMoveAudioFile from '/public/soundEffect/knight.mp3'
 import bishopMoveAudioFile from '/public/soundEffect/bishop.mp3'
 import kingMoveAudioFile from '/public/soundEffect/king.mp3'
 import queenMoveAudioFile from '/public/soundEffect/queen.mp3'
 import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
+import { getValidAllMoves, validateNormalMove } from '@/abriter/validMoves';
 
 
 
@@ -34,12 +33,12 @@ export default function Pieces() {
     }
 
     const getAudioFile = (rem) => {
-        switch(rem) {
-            case 0 : return RookMoveAudioFile;
-            case 1 : return knightMoveAudioFile;
-            case 2 : return bishopMoveAudioFile;
-            case 3 : return queenMoveAudioFile;
-            case 4 : return kingMoveAudioFile;
+        switch (rem) {
+            case 0: return RookMoveAudioFile;
+            case 1: return knightMoveAudioFile;
+            case 2: return bishopMoveAudioFile;
+            case 3: return queenMoveAudioFile;
+            case 4: return kingMoveAudioFile;
             default: return pawnMoveAudioFile;
         }
     }
@@ -49,30 +48,28 @@ export default function Pieces() {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
-            if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
-                const chessMoveAudio = new Audio(getAudioFile(ChessPiece % 6));
-                chessMoveAudio.play();
-                if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
-                    let oldX = file > targetFile ? 0 : 7;
-                    let x = targetFile + (file > targetFile ? 1 : -1);
-                    nvPositions[rank][x] = nvPositions[rank][oldX];
-                    nvPositions[rank][oldX] = '';
-                }
-                checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions })
-                dispatch({ type: "NEW_POSITION", nvPositions });
-                setActiveTile();
-                setInActiveTile([targetRank, targetFile, ChessPiece]);
-                if (rank % 7 === 0 && file % 7 === 0 && ChessPiece % 6 === 0) {
-                    const x = rank === 0 ? 0 : 1;
-                    const y = file === 0 ? 0 : 1;
-                    castleCase[x][y] = false;
-                    dispatch({ type: "CANCEL_CASTLE", castleCase });
-                } else if (rank % 7 === 0 && file === 3 && ChessPiece % 6 == 4) {
-                    const x = rank === 0 ? 0 : 1;
-                    castleCase[x][0] = false;
-                    castleCase[x][1] = false;
-                    dispatch({ type: "CANCEL_CASTLE", castleCase });
-                }
+            const chessMoveAudio = new Audio(pawnMoveAudioFile);
+            chessMoveAudio.play();
+            if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
+                let oldX = file > targetFile ? 0 : 7;
+                let x = targetFile + (file > targetFile ? 1 : -1);
+                nvPositions[rank][x] = nvPositions[rank][oldX];
+                nvPositions[rank][oldX] = '';
+            }
+            checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions })
+            dispatch({ type: "NEW_POSITION", nvPositions });
+            setActiveTile();
+            setInActiveTile([targetRank, targetFile, ChessPiece]);
+            if (rank % 7 === 0 && file % 7 === 0 && ChessPiece % 6 === 0) {
+                const x = rank === 0 ? 0 : 1;
+                const y = file === 0 ? 0 : 1;
+                castleCase[x][y] = false;
+                dispatch({ type: "CANCEL_CASTLE", castleCase });
+            } else if (rank % 7 === 0 && file === 3 && ChessPiece % 6 == 4) {
+                const x = rank === 0 ? 0 : 1;
+                castleCase[x][0] = false;
+                castleCase[x][1] = false;
+                dispatch({ type: "CANCEL_CASTLE", castleCase });
             }
         }
     }
@@ -107,9 +104,9 @@ export default function Pieces() {
             const rank = activeTile[0];
             const file = activeTile[1];
             const ChessPiece = activeTile[2];
-            dispatch({type:"SET_ACTIVE_MOVE", activeMoves:getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase })});
+            dispatch({ type: "SET_ACTIVE_MOVE", activeMoves: getValidAllMoves({ positions, rank, file, ChessPiece, prevPositions, castleCase }) });
         } else {
-            dispatch({type:"SET_ACTIVE_MOVE", activeMoves:[]});
+            dispatch({ type: "SET_ACTIVE_MOVE", activeMoves: [] });
         }
     }, [activeTile]);
 
