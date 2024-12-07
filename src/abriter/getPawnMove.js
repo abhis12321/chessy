@@ -52,7 +52,7 @@ export const getEnPassant = ({ positions, prevPositions, rank, file, ChessPiece 
 
 
 export const checkIfEnPassant = ({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions }) => {
-    if (ChessPiece % 6 != 5 || Math.abs(targetFile - file) !== 1 && Math.abs(targetRank - rank) !== 1) {
+    if (ChessPiece % 6 !== 5 || Math.abs(targetFile - file) !== 1 && Math.abs(targetRank - rank) !== 1) {
         return false;
     }
 

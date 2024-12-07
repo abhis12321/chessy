@@ -9,7 +9,7 @@ import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
 
 export default function Pieces() {
     const ref = useRef();
-    const { chessState, dispatch, setActiveMoves } = useChessContext();
+    const { chessState, dispatch, activeMoves, setActiveMoves } = useChessContext();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
     const castleCase = chessState.castleCase;
@@ -27,12 +27,12 @@ export default function Pieces() {
     }
 
     const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
-        if (check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile, prevPositions, castleCase })) {
+        if (check_turn && validateNormalMove({ targetRank, targetFile, activeMoves })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
-                if(ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
+                if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
                     let oldX = file > targetFile ? 0 : 7;
                     let x = targetFile + (file > targetFile ? 1 : -1);
                     nvPositions[rank][x] = nvPositions[rank][oldX];
@@ -42,16 +42,16 @@ export default function Pieces() {
                 dispatch({ type: "NEW_POSITION", nvPositions });
                 setActiveTile();
                 setInActiveTile([targetRank, targetFile, ChessPiece]);
-                if(rank % 7 === 0 && file % 7 === 0 && ChessPiece % 6 === 0) {
+                if (rank % 7 === 0 && file % 7 === 0 && ChessPiece % 6 === 0) {
                     const x = rank === 0 ? 0 : 1;
                     const y = file === 0 ? 0 : 1;
                     castleCase[x][y] = false;
-                    dispatch({type:"CANCEL_CASTLE" , castleCase});
-                } else if(rank % 7 === 0 && file === 3 && ChessPiece % 6 == 4) {
+                    dispatch({ type: "CANCEL_CASTLE", castleCase });
+                } else if (rank % 7 === 0 && file === 3 && ChessPiece % 6 == 4) {
                     const x = rank === 0 ? 0 : 1;
                     castleCase[x][0] = false;
                     castleCase[x][1] = false;
-                    dispatch({type:"CANCEL_CASTLE" , castleCase});
+                    dispatch({ type: "CANCEL_CASTLE", castleCase });
                 }
             }
         }
