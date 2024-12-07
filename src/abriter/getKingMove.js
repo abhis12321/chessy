@@ -17,7 +17,7 @@ export const getKingMove = ({ positions, rank, file, ChessPiece, castleCase }) =
         const x = rank + dir[0];
         const y = file + dir[1];
 
-        if (isValid(x, y, positions, ChessPiece)) {
+        if (isValid(x, y, positions, ChessPiece) && ifNearEnemyKing({ x, y, positions, enemyKing: ChessPiece === 4 ? 10 : 4 })) {
             move.push([x, y]);
         }
     })
@@ -30,6 +30,28 @@ export const getKingMove = ({ positions, rank, file, ChessPiece, castleCase }) =
 
 const isValid = (x, y, positions, ChessPiece) => (x >= 0 && x < 8 && y >= 0 && y < 8 && ((positions[x][y] === '') || (ChessPiece <= 5 && positions[x][y] > 5) || (ChessPiece > 5 && positions[x][y] <= 5)));
 
+const ifNearEnemyKing = ({x, y, positions, enemyKing}) => {
+    let dir = [
+        [-1, -1],
+        [-1, 1],
+        [1, -1],
+        [1, 1],
+        [0, -1],
+        [0, 1],
+        [-1, 0],
+        [1, 0],
+    ]
+
+    for (let i = 0; i < 8; i++) {
+        const envX = x + dir[i][0];
+        const envY = y + dir[i][1];
+        if (positions?.[envX]?.[envY] === enemyKing) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 const ifCastleCaseValid = ({ ChessPiece, castleCase, dir }) => {
     const castleRookIndex = ChessPiece === 4 ? 0 : 1;
