@@ -5,12 +5,14 @@ import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
+import { cancelCastle } from '@/abriter/getKingMove';
 
 export default function Pieces() {
     const ref = useRef();
     const { chessState, dispatch, setActiveMoves } = useChessContext();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
+    const castleCase = chessState.castleCase;
     const positions = chessState.positions[chessState.positions.length - 1];
     const prevPositions = chessState.positions[chessState.positions.length - 2];
 
@@ -25,12 +27,12 @@ export default function Pieces() {
     }
 
     const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
-        if (check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile, prevPositions })) {
+        if (check_turn && validateNormalMove({ positions, rank, file, ChessPiece, targetRank, targetFile, prevPositions, castleCase })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
-                checkIfEnPassant({positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions})
+                checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions })
                 dispatch({ type: "NEW_POSITION", nvPositions });
                 setActiveTile();
                 setInActiveTile([targetRank, targetFile, ChessPiece]);
@@ -68,7 +70,7 @@ export default function Pieces() {
             const rank = activeTile[0];
             const file = activeTile[1];
             const ChessPiece = activeTile[2];
-            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions }));
+            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase }));
         } else {
             setActiveMoves([]);
         }

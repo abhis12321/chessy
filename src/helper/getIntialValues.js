@@ -38,23 +38,23 @@ export const getInitalPositions = () => {
     positions[7][0] = 6;
     positions[7][7] = 6;
 
-    positions[0][1] = 1;
-    positions[0][6] = 1;
+    // positions[0][1] = 1;
+    // positions[0][6] = 1;
 
-    positions[7][1] = 7;
-    positions[7][6] = 7;
+    // positions[7][1] = 7;
+    // positions[7][6] = 7;
 
-    positions[0][2] = 2;
-    positions[0][5] = 2;
+    // positions[0][2] = 2;
+    // positions[0][5] = 2;
 
-    positions[7][2] = 8;
-    positions[7][5] = 8;
+    // positions[7][2] = 8;
+    // positions[7][5] = 8;
 
     positions[0][3] = 4;
     positions[7][3] = 10;
 
-    positions[0][4] = 3;
-    positions[7][4] = 9;
+    // positions[0][4] = 3;
+    // positions[7][4] = 9;
     return positions;
 }
 
@@ -70,8 +70,10 @@ export const copyPostions = (positions) => {
     return newPositions;
 }
 
+const castleCase = new Array(2).fill('').map((_) => new Array(2).fill(true));
 
 export const initialChessState = {
     positions: [getInitalPositions()],
     turn: 'w',
+    castleCase,
 }
