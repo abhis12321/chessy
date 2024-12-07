@@ -31,15 +31,11 @@ export const getKingMove = ({ positions, rank, file, ChessPiece, castleCase }) =
 const isValid = (x, y, positions, ChessPiece) => (x >= 0 && x < 8 && y >= 0 && y < 8 && ((positions[x][y] === '') || (ChessPiece <= 5 && positions[x][y] > 5) || (ChessPiece > 5 && positions[x][y] <= 5)));
 
 
-export const cancelCastle = ({ ChessPiece, castleCase, dir }) => {
-    const castleRookIndex = ChessPiece === 4 ? 0 : 1;
-    castleCase[castleRookIndex][dir] = false;
-}
-
 const ifCastleCaseValid = ({ ChessPiece, castleCase, dir }) => {
     const castleRookIndex = ChessPiece === 4 ? 0 : 1;
     return castleCase[castleRookIndex][dir];
 }
+
 
 const getCastleMove = ({ positions, rank, file, ChessPiece, castleCase }) => {
     const move = [];

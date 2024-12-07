@@ -4,10 +4,10 @@ import { FaChessPawn, FaChessKing, FaChessQueen, FaChessKnight, FaChessBishop, F
 export const getChar = (i) => String.fromCharCode(97 + i);
 
 
-export const ranks = new Array(8).fill().map((val, index) => 8 - index);
+export const ranks = new Array(8).fill().map((_, index) => 8 - index);
 
 
-export const files = new Array(8).fill().map((val, index) => getChar(index));
+export const files = new Array(8).fill().map((_, index) => getChar(index));
 
 
 export const WR = <FaChessRook className="text-[calc(min(100vw,100vh)/14)] text-white drop-shadow-[0_0_1px_black]" />
@@ -38,23 +38,24 @@ export const getInitalPositions = () => {
     positions[7][0] = 6;
     positions[7][7] = 6;
 
-    // positions[0][1] = 1;
-    // positions[0][6] = 1;
+    positions[0][1] = 1;
+    positions[0][6] = 1;
 
-    // positions[7][1] = 7;
-    // positions[7][6] = 7;
+    positions[7][1] = 7;
+    positions[7][6] = 7;
 
-    // positions[0][2] = 2;
-    // positions[0][5] = 2;
+    positions[0][2] = 2;
+    positions[0][5] = 2;
 
-    // positions[7][2] = 8;
-    // positions[7][5] = 8;
+    positions[7][2] = 8;
+    positions[7][5] = 8;
+
+    positions[0][4] = 3;
+    positions[7][4] = 9;
 
     positions[0][3] = 4;
     positions[7][3] = 10;
-
-    // positions[0][4] = 3;
-    // positions[7][4] = 9;
+    
     return positions;
 }
 

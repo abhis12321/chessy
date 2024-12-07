@@ -5,7 +5,7 @@ import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
-import { cancelCastle } from '@/abriter/getKingMove';
+
 
 export default function Pieces() {
     const ref = useRef();
@@ -36,6 +36,17 @@ export default function Pieces() {
                 dispatch({ type: "NEW_POSITION", nvPositions });
                 setActiveTile();
                 setInActiveTile([targetRank, targetFile, ChessPiece]);
+                if(rank % 7 === 0 && file % 7 === 0 && ChessPiece % 6 === 0) {
+                    const x = rank === 0 ? 0 : 1;
+                    const y = file === 0 ? 0 : 1;
+                    castleCase[x][y] = false;
+                    dispatch({type:"CANCEL_CASTLE" , castleCase});
+                } else if(rank % 7 === 0 && file === 3 && ChessPiece % 6 == 4) {
+                    const x = rank === 0 ? 0 : 1;
+                    castleCase[x][0] = false;
+                    castleCase[x][1] = false;
+                    dispatch({type:"CANCEL_CASTLE" , castleCase});
+                }
             }
         }
     }

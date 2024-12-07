@@ -18,6 +18,12 @@ export const reducer = (state , action) => {
                 turn,
             }
         }
+        case "CANCEL_CASTLE" : {
+            return {
+                ...state,
+                castleCase:action.castleCase,
+            }
+        }
         default:
             return state;
     }
