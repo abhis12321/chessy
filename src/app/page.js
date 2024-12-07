@@ -23,7 +23,7 @@ export default function page() {
     return false;
   }, [activeMoves]);
 
-  useEffect(() => console.log(activeMoves) , [activeMoves])
+  // useEffect(() => console.log(activeMoves) , [activeMoves])
 
   return (
     <ChessContext.Provider value={{ chessState, dispatch, activeMoves, setActiveMoves, isActiveMove }}>

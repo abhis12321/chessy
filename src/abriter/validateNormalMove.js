@@ -10,7 +10,6 @@ export const getMove = [getRookMove, getKnightMove, getBishopMove, getQueenMove,
 
 export const validateNormalMove = ({ positions, rank, file, ChessPiece, targetRank, targetFile, prevPositions }) => {
     const allMoves = getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions });
-    console.log({allMoves})
     for(let i = 0; i < allMoves?.length; i++) {
         const move = allMoves[i];
         if(move[0] == targetRank && move[1] == targetFile) {

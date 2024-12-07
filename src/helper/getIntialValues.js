@@ -50,11 +50,11 @@ export const getInitalPositions = () => {
     positions[7][2] = 8;
     positions[7][5] = 8;
 
-    positions[0][3] = 3;
-    positions[7][3] = 9;
+    positions[0][3] = 4;
+    positions[7][3] = 10;
 
-    positions[0][4] = 4;
-    positions[7][4] = 10;
+    positions[0][4] = 3;
+    positions[7][4] = 9;
     return positions;
 }
 
