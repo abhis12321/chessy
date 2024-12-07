@@ -77,4 +77,5 @@ export const initialChessState = {
     positions: [getInitalPositions()],
     turn: 'w',
     castleCase,
+    activeMoves:[],
 }

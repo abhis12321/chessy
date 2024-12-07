@@ -5,13 +5,20 @@ import { isKingChecked } from '@/abriter/isKingChecked';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getMove, validateNormalMove } from '@/abriter/validateNormalMove';
+import RookMoveAudioFile from '/public/soundEffect/rook.mp3'
+import knightMoveAudioFile from '/public/soundEffect/knight.mp3'
+import bishopMoveAudioFile from '/public/soundEffect/bishop.mp3'
+import kingMoveAudioFile from '/public/soundEffect/king.mp3'
+import queenMoveAudioFile from '/public/soundEffect/queen.mp3'
+import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
+
 
 
 export default function Pieces() {
     const ref = useRef();
-    const { chessState, dispatch, activeMoves, setActiveMoves } = useChessContext();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
+    const { chessState, dispatch, activeMoves } = useChessContext();
     const castleCase = chessState.castleCase;
     const positions = chessState.positions[chessState.positions.length - 1];
     const prevPositions = chessState.positions[chessState.positions.length - 2];
@@ -26,12 +33,25 @@ export default function Pieces() {
         return { targetRank, targetFile };
     }
 
+    const getAudioFile = (rem) => {
+        switch(rem) {
+            case 0 : return RookMoveAudioFile;
+            case 1 : return knightMoveAudioFile;
+            case 2 : return bishopMoveAudioFile;
+            case 3 : return queenMoveAudioFile;
+            case 4 : return kingMoveAudioFile;
+            default: return pawnMoveAudioFile;
+        }
+    }
+
     const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
         if (check_turn && validateNormalMove({ targetRank, targetFile, activeMoves })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
+                const chessMoveAudio = new Audio(getAudioFile(ChessPiece % 6));
+                chessMoveAudio.play();
                 if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
                     let oldX = file > targetFile ? 0 : 7;
                     let x = targetFile + (file > targetFile ? 1 : -1);
@@ -87,9 +107,9 @@ export default function Pieces() {
             const rank = activeTile[0];
             const file = activeTile[1];
             const ChessPiece = activeTile[2];
-            setActiveMoves(getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase }));
+            dispatch({type:"SET_ACTIVE_MOVE", activeMoves:getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase })});
         } else {
-            setActiveMoves([]);
+            dispatch({type:"SET_ACTIVE_MOVE", activeMoves:[]});
         }
     }, [activeTile]);
 

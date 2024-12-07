@@ -24,6 +24,12 @@ export const reducer = (state , action) => {
                 castleCase:action.castleCase,
             }
         }
+        case "SET_ACTIVE_MOVE" : {
+            return {
+                ...state,
+                activeMoves:action.activeMoves,
+            }
+        }
         default:
             return state;
     }
