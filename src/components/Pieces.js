@@ -32,6 +32,12 @@ export default function Pieces() {
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             if (!isKingChecked({ positions: nvPositions, king: chessState?.turn === 'w' ? 4 : 10 })) {
+                if(ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) {
+                    let oldX = file > targetFile ? 0 : 7;
+                    let x = targetFile + (file > targetFile ? 1 : -1);
+                    nvPositions[rank][x] = nvPositions[rank][oldX];
+                    nvPositions[rank][oldX] = '';
+                }
                 checkIfEnPassant({ positions, prevPositions, rank, file, ChessPiece, targetRank, targetFile, nvPositions })
                 dispatch({ type: "NEW_POSITION", nvPositions });
                 setActiveTile();
