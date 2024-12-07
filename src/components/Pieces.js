@@ -5,18 +5,15 @@ import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getValidAllMoves, validateNormalMove } from '@/abriter/validMoves';
 import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
-// import RookMoveAudioFile from '/public/soundEffect/rook.mp3'
-// import knightMoveAudioFile from '/public/soundEffect/knight.mp3'
-// import bishopMoveAudioFile from '/public/soundEffect/bishop.mp3'
-// import kingMoveAudioFile from '/public/soundEffect/king.mp3'
-// import queenMoveAudioFile from '/public/soundEffect/queen.mp3'
-
+import PromotePawn from './PromotePawn';
 
 
 export default function Pieces() {
     const ref = useRef();
+    const [promotePromise, setPromotePromise] = useState();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
+    const [promotePawnPage, setPromotePawnPage] = useState(false);
     const { chessState, dispatch, activeMoves } = useChessContext();
     const castleCase = chessState.castleCase;
     const positions = chessState.positions[chessState.positions.length - 1];
@@ -32,24 +29,28 @@ export default function Pieces() {
         return { targetRank, targetFile };
     }
 
-    // const getAudioFile = (rem) => {
-    //     switch (rem) {
-    //         case 0: return RookMoveAudioFile;
-    //         case 1: return knightMoveAudioFile;
-    //         case 2: return bishopMoveAudioFile;
-    //         case 3: return queenMoveAudioFile;
-    //         case 4: return kingMoveAudioFile;
-    //         default: return pawnMoveAudioFile;
-    //     }
-    // }
+    const isPromoting = ({ targetRank, ChessPiece }) => {
+        return ((ChessPiece === 5 && targetRank === 7) || (ChessPiece === 11 && targetRank === 0))
+    }
 
-    const playNextMove = ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
+
+    const playNextMove = async ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
         if (check_turn && validateNormalMove({ targetRank, targetFile, activeMoves })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
             const chessMoveAudio = new Audio(pawnMoveAudioFile);
             chessMoveAudio.play();
+            if (isPromoting({ targetRank, ChessPiece })) {
+                setPromotePawnPage(true);
+                const promotedPiece = await new Promise((resolve) => {
+                    setPromotePromise(() => (choice) => {
+                        resolve(choice); // Resolve the promise when a choice is made
+                    });
+                });
+                setPromotePawnPage(false);
+                nvPositions[targetRank][targetFile] = promotedPiece;
+            }
             if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) { // castle
                 let oldX = file > targetFile ? 0 : 7;
                 let x = targetFile + (file > targetFile ? 1 : -1);
@@ -119,6 +120,12 @@ export default function Pieces() {
                         <Peice key={`${rank}-${file}`} rank={rank} file={file} ChessPiece={ChessPiece} handleClick={handlePieceClick} activeTile={activeTile} inActiveTile={inActiveTile} />
                     ))
             }
+
+            {
+                promotePawnPage && <PromotePawn handlePromotePawn={promotePromise} start={chessState.turn === 'w' ? 0 : 6} />
+            }
+
+            {/* <PromotePawn start={0} /> */}
         </div>
     )
 }
