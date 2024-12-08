@@ -9,7 +9,7 @@ export const ifAnyMovePossible = ({ positions, prevPositions, castleCase, turn }
             if (ifTurn(turn, positions[rank][file])) {
                 const ChessPiece = positions[rank][file];
                 const move = getValidAllMoves({ positions, rank, file, ChessPiece, prevPositions, castleCase });
-                console.log({turn , positions , prevPositions , castleCase, move});
+                // console.log({turn , positions , prevPositions , castleCase, move});
                 if (move?.length > 0) {
                     return true;
                 }

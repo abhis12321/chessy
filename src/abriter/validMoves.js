@@ -10,7 +10,7 @@ import { isKingChecked } from "./isKingChecked"
 export const getMove = [getRookMove, getKnightMove, getBishopMove, getQueenMove, getKingMove, getPawnMove];
 
 
-export const validateNormalMove = ({ activeMoves, targetRank, targetFile }) => {
+export const validateMove = ({ activeMoves, targetRank, targetFile }) => {
     for (let i = 0; i < activeMoves?.length; i++) {
         const move = activeMoves[i];
         if (move[0] == targetRank && move[1] == targetFile) {
@@ -25,7 +25,7 @@ export const getValidAllMoves = ({ positions, rank, file, ChessPiece, prevPositi
     const nvPositions = copyPostions(positions);
     const moves = getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase });
     const validMove = [];
-    console.log({nvPositions})
+    // console.log({nvPositions})
     moves.forEach((move) => {
         const targetRank = move[0];
         const targetFile = move[1];        

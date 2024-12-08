@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useChessContext } from '@/context/Context';
 import { copyPostions } from '@/helper/getIntialValues';
 import { checkIfEnPassant } from '@/abriter/getPawnMove';
-import { getValidAllMoves, validateNormalMove } from '@/abriter/validMoves';
-import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
+import { getValidAllMoves, validateMove } from '@/abriter/validMoves';
+import chessMoveAudioFile from '/public/soundEffect/chessMove.mp3'
 import PromotePawn from './PromotePawn';
 import { ifAnyMovePossible } from '@/abriter/ifAnyMovePossible';
 import { isKingChecked } from '@/abriter/isKingChecked';
+import AlertMessage from './AlertMessage';
 
 
 export default function Pieces() {
@@ -15,7 +16,7 @@ export default function Pieces() {
     const [promotePromise, setPromotePromise] = useState();
     const [activeTile, setActiveTile] = useState();
     const [inActiveTile, setInActiveTile] = useState();
-    const [promotePawnPage, setPromotePawnPage] = useState(false);
+    const [popup, setPopup] = useState(0);
     const { chessState, dispatch, activeMoves } = useChessContext();
     const castleCase = chessState.castleCase;
     const positions = chessState.positions[chessState.positions.length - 1];
@@ -37,20 +38,20 @@ export default function Pieces() {
 
 
     const playNextMove = async ({ check_turn, ChessPiece, rank, file, targetRank, targetFile }) => {
-        if (check_turn && validateNormalMove({ targetRank, targetFile, activeMoves })) {
+        if (check_turn && validateMove({ targetRank, targetFile, activeMoves })) {
             const nvPositions = copyPostions(positions);
             nvPositions[rank][file] = '';
             nvPositions[targetRank][targetFile] = ChessPiece;
-            const chessMoveAudio = new Audio(pawnMoveAudioFile);
+            const chessMoveAudio = new Audio(chessMoveAudioFile);
             chessMoveAudio.play();
             if (isPromoting({ targetRank, ChessPiece })) { // pawn-promotion
-                setPromotePawnPage(true);
+                setPopup(1);
                 const promotedPiece = await new Promise((resolve) => {
                     setPromotePromise(() => (choice) => {
                         resolve(choice); // Resolve the promise when a choice is made
                     });
                 });
-                setPromotePawnPage(false);
+                setPopup(0);
                 nvPositions[targetRank][targetFile] = promotedPiece;
             }
             if (ChessPiece % 6 == 4 && Math.abs(file - targetFile) > 1) { // castle
@@ -79,15 +80,17 @@ export default function Pieces() {
     }
 
     const checkIfNext = ({ positions, prevPositions, king, castleCase, turn }) => {
-        console.log({ positions, prevPositions, king, castleCase, turn });
+        // console.log({ positions, prevPositions, king, castleCase, turn });
         const ifKingChecked = isKingChecked({ positions, king });
         const isAnyMovePossible = ifAnyMovePossible({ positions, prevPositions, castleCase, turn })
-        console.log({ isAnyMovePossible, ifKingChecked })
+        // console.log({ isAnyMovePossible, ifKingChecked })
         if (!isAnyMovePossible) {
             if(ifKingChecked) {
-                alert("checkmate")
+                setPopup(`${turn === 'b' ? "Black" : "White"} CheckMate, ${chessState.turn === 'b' ? "Black" : "White"} won!`)
+                // alert("checkmate")
             } else {
-                alert("stalemate")
+                // alert("stalemate")
+                setPopup("Game StaleMate!")
             }
         }
     }
@@ -139,10 +142,11 @@ export default function Pieces() {
             }
 
             {
-                promotePawnPage && <PromotePawn handlePromotePawn={promotePromise} start={chessState.turn === 'w' ? 0 : 6} />
+                popup === 1 ? <PromotePawn handlePromotePawn={promotePromise} start={chessState.turn === 'w' ? 0 : 6} />
+                :
+                popup && <AlertMessage message={popup} light={chessState.turn === 'b'}/>
             }
 
-            {/* <PromotePawn start={0} /> */}
         </div>
     )
 }
