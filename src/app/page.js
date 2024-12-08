@@ -6,7 +6,6 @@ import FilesBar from "@/components/FilesBar";
 import { ChessContext } from "@/context/Context";
 import { useCallback, useReducer } from "react";
 import { files, initialChessState, ranks } from "@/helper/getIntialValues";
-import PromotePawn from "@/components/PromotePawn";
 
 export default function page() {
   const [chessState, dispatch] = useReducer(reducer, initialChessState);

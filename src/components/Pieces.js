@@ -6,6 +6,8 @@ import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getValidAllMoves, validateNormalMove } from '@/abriter/validMoves';
 import pawnMoveAudioFile from '/public/soundEffect/pawn.mp3'
 import PromotePawn from './PromotePawn';
+import { ifAnyMovePossible } from '@/abriter/ifAnyMovePossible';
+import { isKingChecked } from '@/abriter/isKingChecked';
 
 
 export default function Pieces() {
@@ -41,7 +43,7 @@ export default function Pieces() {
             nvPositions[targetRank][targetFile] = ChessPiece;
             const chessMoveAudio = new Audio(pawnMoveAudioFile);
             chessMoveAudio.play();
-            if (isPromoting({ targetRank, ChessPiece })) {
+            if (isPromoting({ targetRank, ChessPiece })) { // pawn-promotion
                 setPromotePawnPage(true);
                 const promotedPiece = await new Promise((resolve) => {
                     setPromotePromise(() => (choice) => {
@@ -71,6 +73,21 @@ export default function Pieces() {
                 castleCase[x][0] = false;
                 castleCase[x][1] = false;
                 dispatch({ type: "CANCEL_CASTLE", castleCase });
+            }
+            checkIfNext({ positions: nvPositions, prevPositions: positions, castleCase, turn: chessState.turn === 'w' ? 'b' : 'w', king: chessState.turn === 'w' ? 10 : 4 });
+        }
+    }
+
+    const checkIfNext = ({ positions, prevPositions, king, castleCase, turn }) => {
+        console.log({ positions, prevPositions, king, castleCase, turn });
+        const ifKingChecked = isKingChecked({ positions, king });
+        const isAnyMovePossible = ifAnyMovePossible({ positions, prevPositions, castleCase, turn })
+        console.log({ isAnyMovePossible, ifKingChecked })
+        if (!isAnyMovePossible) {
+            if(ifKingChecked) {
+                alert("checkmate")
+            } else {
+                alert("stalemate")
             }
         }
     }

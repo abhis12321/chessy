@@ -28,36 +28,38 @@ export const CPS = [WR, WKt, WB, WQ, WK, WP, BR, BKt, BB, BQ, BK, BP];
 
 export const getInitalPositions = () => {
     let positions = new Array(8).fill('').map((x) => new Array(8).fill(''));
-    // for (let i = 0; i < 8; i++) {
-    //     positions[1][i] = 5;
-    //     positions[6][i] = 11;
-    // }
-    // positions[0][0] = 0;
-    // positions[0][7] = 0;
+    for (let i = 0; i < 8; i++) {
+        positions[1][i] = 5;
+        positions[6][i] = 11;
+    }
+    positions[0][0] = 0;
+    positions[0][7] = 0;
 
-    // positions[7][0] = 6;
-    // positions[7][7] = 6;
+    positions[7][0] = 6;
+    positions[7][7] = 6;
 
-    // positions[0][1] = 1;
-    // positions[0][6] = 1;
+    positions[0][1] = 1;
+    positions[0][6] = 1;
 
-    // positions[7][1] = 7;
-    // positions[7][6] = 7;
+    positions[7][1] = 7;
+    positions[7][6] = 7;
 
-    // positions[0][2] = 2;
-    // positions[0][5] = 2;
+    positions[0][2] = 2;
+    positions[0][5] = 2;
 
-    // positions[7][2] = 8;
-    // positions[7][5] = 8;
+    positions[7][2] = 8;
+    positions[7][5] = 8;
 
-    // positions[0][4] = 3;
-    // positions[7][4] = 9;
+    positions[0][4] = 3;
+    positions[7][4] = 9;
 
     positions[0][3] = 4;
     positions[7][3] = 10;
+    
 
-    positions[6][6] = 5;
-    positions[1][6] = 11;
+    // positions[0][0] = 0;
+    // positions[5][7] = 4;
+    // positions[7][7] = 10;
     
     return positions;
 }

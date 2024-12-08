@@ -25,7 +25,7 @@ export const getValidAllMoves = ({ positions, rank, file, ChessPiece, prevPositi
     const nvPositions = copyPostions(positions);
     const moves = getMove[ChessPiece % 6]({ positions, rank, file, ChessPiece, prevPositions, castleCase });
     const validMove = [];
-
+    console.log({nvPositions})
     moves.forEach((move) => {
         const targetRank = move[0];
         const targetFile = move[1];        

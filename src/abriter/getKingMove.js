@@ -45,7 +45,7 @@ const ifNearEnemyKing = ({x, y, positions, enemyKing}) => {
     for (let i = 0; i < 8; i++) {
         const envX = x + dir[i][0];
         const envY = y + dir[i][1];
-        if (positions?.[envX]?.[envY] === enemyKing) {
+        if (envX >= 0 && envX < 8 && envY >= 0 && envY < 8 && positions[envX][envY] === enemyKing) {
             return false;
         }
     }
@@ -61,10 +61,10 @@ const ifCastleCaseValid = ({ ChessPiece, castleCase, dir }) => {
 
 const getCastleMove = ({ positions, rank, file, ChessPiece, castleCase }) => {
     const move = [];
-    if (positions[rank][1] === '' && positions[rank][2] === '' && ifCastleCaseValid({ ChessPiece, castleCase, dir: 0 })) {
+    if (positions[rank][1] === '' && positions[rank][2] === '' && positions[rank][0] !== '' && positions[rank][0] % 6 === 0 && positions[rank][4] === ChessPiece && ifCastleCaseValid({ ChessPiece, castleCase, dir: 0 })) {
         move.push([rank, file - 2]);
     }
-    if (positions[rank][4] === '' && positions[rank][5] === '' && positions[rank][6] === '' && ifCastleCaseValid({ ChessPiece, castleCase, dir: 1 })) {
+    if (positions[rank][4] === '' && positions[rank][5] === '' && positions[rank][6] !== '' && positions[rank][6] === '' && positions[rank][4] === ChessPiece && positions[rank][7] % 6 === 0 && ifCastleCaseValid({ ChessPiece, castleCase, dir: 1 })) {
         move.push([rank, file + 2]);
     }
     return move;
