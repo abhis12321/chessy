@@ -80,17 +80,13 @@ export default function Pieces() {
     }
 
     const checkIfNext = ({ positions, prevPositions, king, castleCase, turn }) => {
-        // console.log({ positions, prevPositions, king, castleCase, turn });
         const ifKingChecked = isKingChecked({ positions, king });
-        const isAnyMovePossible = ifAnyMovePossible({ positions, prevPositions, castleCase, turn })
-        // console.log({ isAnyMovePossible, ifKingChecked })
+        const isAnyMovePossible = ifAnyMovePossible({ positions, prevPositions, castleCase, turn });
         if (!isAnyMovePossible) {
-            if(ifKingChecked) {
-                setPopup(`${turn === 'b' ? "Black" : "White"} CheckMate, ${chessState.turn === 'b' ? "Black" : "White"} won!`)
-                // alert("checkmate")
+            if (ifKingChecked) {
+                setPopup({ message2: `${turn === 'b' ? "Black" : "White"} CheckMate`, message1: `${chessState.turn === 'b' ? "Black" : "White"} won!` });
             } else {
-                // alert("stalemate")
-                setPopup("Game StaleMate!")
+                setPopup({ message1: "Game StaleMate!" });
             }
         }
     }
@@ -131,6 +127,11 @@ export default function Pieces() {
         }
     }, [activeTile]);
 
+    const handleNewGame = () => {
+        setPopup(0);
+        dispatch({ type: "RESET_GAME" });
+    }
+
 
     return (
         <div className='w-full h-full absolute top-0 left-0 right-0 bottom-0 grid grid-cols-8 grid-flow-row bg-red-600/10' ref={ref} onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleBoardClick}>
@@ -143,8 +144,8 @@ export default function Pieces() {
 
             {
                 popup === 1 ? <PromotePawn handlePromotePawn={promotePromise} start={chessState.turn === 'w' ? 0 : 6} />
-                :
-                popup && <AlertMessage message={popup} light={chessState.turn === 'b'}/>
+                    :
+                    popup != 0 && <AlertMessage message1={popup.message1} message2={popup.message2} light={chessState.turn === 'b'} handleNewGame={handleNewGame} />
             }
 
         </div>

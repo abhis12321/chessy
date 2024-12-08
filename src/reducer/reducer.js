@@ -1,3 +1,5 @@
+import { initialChessState } from "@/helper/getIntialValues";
+
 export const reducer = (state , action) => {
     switch(action.type) {
         case "NEW_POSITION" : {
@@ -29,6 +31,9 @@ export const reducer = (state , action) => {
                 ...state,
                 activeMoves:action.activeMoves,
             }
+        }
+        case "RESET_GAME" : {
+            return initialChessState;
         }
         default:
             return state;
