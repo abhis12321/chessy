@@ -7,11 +7,11 @@ export const getPawnMove = ({ positions, rank, file, ChessPiece, prevPositions }
 
     if (isForwardValid(x, y, positions)) {
         move.push([x, y]);
-    }
-    // +2 Rank
-    x = rank + (ChessPiece == 5 ? 2 : -2)
-    if (((ChessPiece === 5 && rank === 1) || (ChessPiece === 11 && rank === 6)) && isForwardValid(x, y, positions)) {
-        move.push([x, y]);
+        // +2 Rank
+        x = rank + (ChessPiece == 5 ? 2 : -2)
+        if (((ChessPiece === 5 && rank === 1) || (ChessPiece === 11 && rank === 6)) && isForwardValid(x, y, positions)) {
+            move.push([x, y]);
+        }
     }
 
     // Capture-left
