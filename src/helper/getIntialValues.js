@@ -56,7 +56,8 @@ export const getInitalPositions = () => {
     positions[0][3] = 4;
     positions[7][3] = 10;
     
-    // positions[0][0] = 0;
+    // positions[0][0] = 2;
+    // positions[1][0] = 8;
     // positions[5][7] = 4;
     // positions[7][7] = 10;
     return positions;

@@ -6,7 +6,7 @@ import { checkIfEnPassant } from '@/abriter/getPawnMove';
 import { getValidAllMoves, validateMove } from '@/abriter/validMoves';
 import chessMoveAudioFile from '/public/soundEffect/chessMove.mp3'
 import PromotePawn from './PromotePawn';
-import { ifAnyMovePossible } from '@/abriter/ifAnyMovePossible';
+import { ifAnyMovePossible, insufficientMaterials } from '@/abriter/ifAnyMovePossible';
 import { isKingChecked } from '@/abriter/isKingChecked';
 import AlertMessage from './AlertMessage';
 
@@ -80,14 +80,14 @@ export default function Pieces() {
     }
 
     const checkIfNext = ({ positions, prevPositions, king, castleCase, turn }) => {
-        const ifKingChecked = isKingChecked({ positions, king });
-        const isAnyMovePossible = ifAnyMovePossible({ positions, prevPositions, castleCase, turn });
-        if (!isAnyMovePossible) {
-            if (ifKingChecked) {
+        if (!ifAnyMovePossible({ positions, prevPositions, castleCase, turn })) {
+            if (isKingChecked({ positions, king })) {
                 setPopup({ message2: `${turn === 'b' ? "Black" : "White"} CheckMate`, message1: `${chessState.turn === 'b' ? "Black" : "White"} won!` });
             } else {
                 setPopup({ message1: "Game StaleMate!" });
             }
+        } else if (insufficientMaterials({ positions })) {
+            setPopup({ message1: "Game Draw!", message2: "insufficient material" });
         }
     }
 
@@ -145,7 +145,7 @@ export default function Pieces() {
             {
                 popup === 1 ? <PromotePawn handlePromotePawn={promotePromise} start={chessState.turn === 'w' ? 0 : 6} />
                     :
-                    popup != 0 && <AlertMessage message1={popup.message1} message2={popup.message2} light={chessState.turn === 'b'} handleNewGame={handleNewGame} />
+                    popup != 0 && <AlertMessage message1={popup.message1} message2={popup.message2} light={chessState.turn === 'b'} handleNewGame={handleNewGame} cancelAlert={() => setPopup(0)} />
             }
 
         </div>
